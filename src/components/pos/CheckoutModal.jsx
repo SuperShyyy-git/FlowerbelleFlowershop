@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CreditCard, Wallet, Smartphone, Building2, Banknote, Receipt, User, Mail, Phone, FileText, AlertCircle, Loader2 } from 'lucide-react';
+import { X, Wallet, Smartphone, Banknote, Receipt, User, Phone, FileText, AlertCircle, Loader2 } from 'lucide-react';
 
 // --- THEME CONSTANTS ---
 const THEME = {
@@ -30,23 +30,21 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, totals, onCheckout }) => {
   // Customer fields
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
-  const [customerEmail, setCustomerEmail] = useState('');
   const [notes, setNotes] = useState('');
   
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Defined Payment Methods (Removed Card and Bank Transfer)
   const paymentMethods = [
     { value: 'CASH', label: 'Cash', icon: Banknote },
     { value: 'GCASH', label: 'GCash', icon: Smartphone },
-    { value: 'CARD', label: 'Card', icon: CreditCard },
     { value: 'PAYMAYA', label: 'PayMaya', icon: Wallet },
-    { value: 'BANK_TRANSFER', label: 'Bank Transfer', icon: Building2 },
   ];
 
   // Validations
   const isPaymentAmountValid = paymentMethod === 'CASH' ? (amountPaid && parseFloat(amountPaid) >= totals.total) : true;
   const isReferenceValid = paymentMethod !== 'CASH' ? paymentReference.trim() !== '' : true;
-  const isCustomerValid = customerName.trim() !== '' && customerPhone.trim() !== '' && customerEmail.trim() !== '' && notes.trim() !== '';
+  const isCustomerValid = customerName.trim() !== '' && customerPhone.trim() !== '' && notes.trim() !== '';
   const isFormValid = isPaymentAmountValid && isReferenceValid && isCustomerValid;
 
   const change = amountPaid ? (parseFloat(amountPaid) - totals.total) : 0;
@@ -69,7 +67,6 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, totals, onCheckout }) => {
       payment_reference: paymentReference,
       customer_name: customerName,
       customer_phone: customerPhone,
-      customer_email: customerEmail,
       notes: notes,
       subtotal: totals.subtotal,
       tax: 0,
@@ -93,7 +90,6 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, totals, onCheckout }) => {
     setPaymentReference('');
     setCustomerName('');
     setCustomerPhone('');
-    setCustomerEmail('');
     setNotes('');
   };
 
@@ -278,21 +274,6 @@ const CheckoutModal = ({ isOpen, onClose, cartItems, totals, onCheckout }) => {
                  onChange={(e) => setCustomerPhone(e.target.value)}
                  className={THEME.inputBase}
                  placeholder="Contact Number"
-                 required
-                 disabled={isProcessing}
-               />
-            </div>
-
-            <div>
-               <label className={labelClass}>
-                  <Mail size={14} className="text-[#FF69B4]"/> Email <span className="text-[#FF69B4]">*</span>
-               </label>
-               <input
-                 type="email"
-                 value={customerEmail}
-                 onChange={(e) => setCustomerEmail(e.target.value)}
-                 className={THEME.inputBase}
-                 placeholder="Email Address"
                  required
                  disabled={isProcessing}
                />
